@@ -11,24 +11,8 @@ public class AlumnoService implements AlumnoServiceInterfaz {
 
     private List<Alumno> alumnos = new ArrayList<>();
 
-    public AlumnoService(){
-        loadAlumnos();
-    }
 
-    public void loadAlumnos(){
-        Alumno a1 = new Alumno("Natalia", "Romeo", 30, false, 10, true);
-        Alumno a2 = new Alumno("Diego", "Vazquez", 25, true, 9, true);
-        Alumno a3 = new Alumno("Roberto", "Corbera", 18, false, 8, false);
-        Alumno a4 = new Alumno("Gaston", "Gonzalez", 22, true, 10, false);
-        Alumno a5 = new Alumno("Sandra", "Gomez", 31, false, 6, true);
-        Alumno a6 = new Alumno("Agustin", "Perez", 29, true, 7, true);
-        alumnos.add(a1);
-        alumnos.add(a2);
-        alumnos.add(a3);
-        alumnos.add(a4);
-        alumnos.add(a5);
-        alumnos.add(a6);
-    }
+
 
     //---Mostrar Informacion completa (desordenada)---
     @Override
