@@ -1,33 +1,28 @@
 package com.diego.appCurso.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
 
-@Getter
-@Setter
 
-public class Alumno {
-    private static int contadorId = 0;
-    private int id;
-    private String name;
-    private String lastName;
-    private int age;
+@Data
+@Entity
+public class Alumno implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nombre;
+    private String apellido;
+    private String documento;
+    private int edad;
     private boolean adeudaMateria;
     private int nota;
     private boolean abono;
-
-    public Alumno(String name, String lastName, int age, boolean adeudaMateria, int nota, boolean abono) {
-        this.id = ++contadorId;
-        this.name = name;
-        this.lastName = lastName;
-        this.age = age;
-        this.adeudaMateria = adeudaMateria;
-        this.nota = nota;
-        this.abono = abono;
-    }
-
-
 
 }
 
