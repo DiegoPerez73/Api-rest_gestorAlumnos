@@ -6,6 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+
 public class Alumno {
     private static int contadorId = 0;
     private int id;
