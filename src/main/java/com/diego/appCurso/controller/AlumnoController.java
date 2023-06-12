@@ -19,37 +19,37 @@ public class AlumnoController {
     @GetMapping
     public List<Alumno> get(){ return alumnoService.getAll(); }
 
-//---Get todos ordenados---
-    @GetMapping("/sorted")
-    public String getSorted(){ return alumnoService.getSorted(); }
-
-//---Get por ID ---
+    //---Get por ID ---
     @GetMapping ("/{id}")
-public Alumno getId(@PathVariable int id){ return alumnoService.getById(id);}
+    public Alumno getId(@PathVariable Long id){ return alumnoService.getById(id);}
+
+    //---DELETE por Id---
+    @DeleteMapping ("/{id}")
+    public void deleteById(@PathVariable Long id){
+        alumnoService.deleteById(id);
+    }
+
+    //---Get todos ordenados---
+    @GetMapping("/sorted")
+    public List<Alumno> getSorted(){ return alumnoService.getSorted(); }
 
 //---Get Avg edades---
     @GetMapping("/edadAvg")
-        public String avgEdad(){
+        public double avgEdad(){
             return alumnoService.getPromedioEdades();
         }
 
 //---Get por adeudan materias ---
     @GetMapping("/adeudan")
-    public String adeudaMateria(){ return alumnoService.getAdeudaMaterias(); }
+    public List<Alumno> adeudaMateria(){ return alumnoService.getAdeudaMaterias(); }
 
 //---Get por max nota---
     @GetMapping("/maxNota")
-    public String maxNota(){  return alumnoService.getNotaMasAlta(); }
+    public Alumno maxNota(){  return alumnoService.getNotaMasAlta(); }
 
 //---Get por si abonaron curso---
     @GetMapping("/abono")
-    public String abonaron(){ return alumnoService.getAbono(); }
-
-//---DELETE por Id---
-    @DeleteMapping ("/{id}")
-    public List<Alumno> deleteById(@PathVariable int id){
-        return alumnoService.deleteById(id);
-    }
+    public List<Alumno> abonaron(){ return alumnoService.getAbono(); }
 
 //---ADD alumno ---
     @PostMapping("")

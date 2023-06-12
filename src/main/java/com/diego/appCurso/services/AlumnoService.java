@@ -1,106 +1,86 @@
 package com.diego.appCurso.services;
 
 import com.diego.appCurso.model.Alumno;
+import com.diego.appCurso.repositories.AlumnoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
 
 
 @Service
-public class AlumnoService implements AlumnoServiceInterfaz {
+public class AlumnoService{
 
-    private List<Alumno> alumnos = new ArrayList<>();
-
-
-
+    @Autowired
+    AlumnoRepository alumnoRepository;
 
     //---Mostrar Informacion completa (desordenada)---
-    @Override
+
     public List<Alumno> getAll() {
-        return alumnos;
-    }
-
-    //---Mostrar informacion ordenada de alumnos por apellido ---
-    @Override
-    public String getSorted() {
-
-        alumnos.sort((alumno1, alumno2) -> alumno1.getLastName().compareTo(alumno2.getLastName()));
-
-        List<String> ordenados = alumnos.stream().map(a->a.getName() + " " + a.getLastName() + "\t " + a.getAge()).toList();
-
-        return String.format(String.join("\n",ordenados));
-    }
-
-    //---Mostrar el promedio de edad---
-    @Override
-    public String  getPromedioEdades() {
-        int totalEdades = 0;
-
-        for (Alumno alumno : alumnos) {
-            totalEdades += alumno.getAge();
-        }
-        double promedio = (double) totalEdades / alumnos.size();
-        return "\nEl promedio de las edades de los alumnos es: " + promedio;
-    }
-
-    //---Mostrar el numero de alumnos que adeudan materias---
-@Override
-    public String getAdeudaMaterias(){
-
-        List<String> alumnosAdeudan = alumnos.stream().filter(Alumno::isAdeudaMateria)
-                                            .map(a-> a.getName() + " "+a.getLastName())
-                                            .toList();
-
-        if(alumnosAdeudan.size() == 0) return "Ningun alumno adeuda materias";
-        if(alumnosAdeudan.size() == 1) return alumnosAdeudan.toString();
-        else {
-            return String.format("%d alumnos adeudan materias.\nSon los alumnos:\n%s ",alumnosAdeudan.size(), String.join("\n",alumnosAdeudan) );
-        }
-}
-
-    //---Mostrar alumno con nota mas alta---
-    @Override
-    public String getNotaMasAlta(){
-
-        alumnos.sort(Comparator.comparing(Alumno::getNota).reversed());
-
-        int notaMasAlta = alumnos.get(0).getNota();
-        long cantidadAlumnosConNota = alumnos.stream().filter(alumno -> alumno.getNota() == notaMasAlta).count();
-
-        List<String> alumnosNotaMasAlta = alumnos.stream().filter(alumno -> alumno.getNota() == notaMasAlta)
-                                        .map(alumno -> alumno.getName() + " " + alumno.getLastName())
-                                        .toList();
-
-        if(cantidadAlumnosConNota == 1){
-            return String.format("La nota mas alta es %d\nAlumno: %s ",notaMasAlta, String.join("",alumnosNotaMasAlta));
-        } else {
-            return String.format("La nota mas alta es %d\nHay %d alumnos con esa nota\nAlumnos:\n%s",notaMasAlta,cantidadAlumnosConNota,String.join("\n",alumnosNotaMasAlta));
-        }
-    }
-
-    //---Mostrar si algun alumno no abono la matricula---
-    @Override
-    public String getAbono(){
-
-        List<String> noAbonaron = alumnos.stream().filter(alumno -> !alumno.isAbono()).map(a->a.getName() + " " + a.getLastName()).toList();
-
-        if(noAbonaron.size() > 1 && noAbonaron.size()<alumnos.size()) return String.format("%d alumnos no abonaron la matrícula.\nSon los alumnos:\n%s",noAbonaron.size(),String.join("\n",noAbonaron));
-        if(noAbonaron.size() == 1) return String.format("%s no abonó la matrícula ",String.join("",noAbonaron));
-        if (noAbonaron.size() == alumnos.size()) return "Ningun alumno abonó la matricula";
-        else return "Todos los alumnos abonaron";
+        return alumnoRepository.findAll();
     }
 
     //---Retornar alumno por ID---
-    @Override
-    public Alumno getById(int id){
-        return alumnos.stream().filter(alumno -> alumno.getId() == id).findFirst().orElse(null);
+
+    public Alumno getById(Long id){
+        return alumnoRepository.findById(id).orElse(null);
     }
 
     //---Eliminar un alumno---
-    @Override
-    public List<Alumno> deleteById(int id){
-        alumnos.removeIf(alumno -> alumno.getId() == id);
-        return alumnos;
+    public void deleteById(Long id){
+        alumnoRepository.deleteById(id);
+    }
+
+    //---Mostrar informacion ordenada de alumnos por apellido ---
+
+    public List<Alumno> getSorted() {
+        List<Alumno> listaAlumnos = alumnoRepository.findAll();
+        return listaAlumnos.stream().sorted(Comparator.comparing(Alumno::getApellido)).toList();
+    }
+
+    //---Mostrar el promedio de edad---
+
+    public double getPromedioEdades() {
+
+        List<Alumno> listaAlumnos = alumnoRepository.findAll();
+
+        int totalEdades = 0;
+
+        for (Alumno alumno : listaAlumnos) {
+            totalEdades += alumno.getEdad();
+        }
+
+        return (double) totalEdades /listaAlumnos.size();
+    }
+
+    //---Mostrar el numero de alumnos que adeudan materias---
+
+
+    public List<Alumno> getAdeudaMaterias(){
+       List<Alumno> listaAlumnos = alumnoRepository.findAll();
+
+       return listaAlumnos.stream().filter(alumno -> alumno.getAdeudaMateria()).toList();
+    }
+
+    //---Mostrar alumno con nota mas alta---
+
+    public Alumno getNotaMasAlta(){
+
+        List<Alumno> listaAlumnos = alumnoRepository.findAll();
+
+        listaAlumnos.sort(Comparator.comparing(Alumno::getNota).reversed());
+
+        return listaAlumnos.get(0);
+
+    }
+
+    //---Mostrar si algun alumno no abono la matricula---
+
+    public List<Alumno> getAbono(){
+
+        List<Alumno> listaAlumnos = alumnoRepository.findAll();
+
+        return listaAlumnos.stream().filter(Alumno::getAbono).toList();
     }
 
     //---Añadir alumnos---

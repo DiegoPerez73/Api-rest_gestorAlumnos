@@ -20,9 +20,9 @@ public class Alumno implements Serializable {
     private String apellido;
     private String documento;
     private int edad;
-    private boolean adeudaMateria;
+    private Boolean adeudaMateria;
     private int nota;
-    private boolean abono;
+    private Boolean abono;
 
 }
 
