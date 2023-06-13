@@ -52,7 +52,7 @@ public class AlumnoController {
     public List<Alumno> abonaron(){ return alumnoService.getAbono(); }
 
 //---ADD alumno ---
-    @PostMapping("")
+    @PostMapping
     public Alumno addAlumno(@RequestBody Alumno alumno){
         return alumnoService.add(alumno);
     }

@@ -1,15 +1,13 @@
 package com.diego.appCurso.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
 
 
 @Data
+@Table(name = "alumnos")
 @Entity
 public class Alumno implements Serializable {
     @Id
