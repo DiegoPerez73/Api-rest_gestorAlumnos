@@ -7,11 +7,12 @@ import java.io.Serializable;
 
 
 @Data
-@Table(name = "alumnos")
 @Entity
+@Table(name = "alumnos")
 public class Alumno implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "alumno_id")
     private Long id;
 
     private String nombre;
@@ -22,9 +23,9 @@ public class Alumno implements Serializable {
     private int nota;
     private Boolean abono;
 
-    @ManyToOne
-    @JoinColumn(name = "curso_id", referencedColumnName = "id") //Referencia al Long id de la entity Curso
-    private Curso curso;
+//    @ManyToOne
+//    @JoinColumn(name = "curso_id", referencedColumnName = "id") //Referencia al Long id de la entity Curso
+//    private Curso curso;
 
 }
 

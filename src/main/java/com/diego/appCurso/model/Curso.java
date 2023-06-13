@@ -4,22 +4,22 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Table(name = "cursos")
 @Entity
+@Table(name = "cursos")
 public class Curso implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "curso_id")
     Long id;
 
     String nombreCurso;
 
-    @OneToMany(mappedBy = "curso")
-    List<Alumno> alumnos = new ArrayList<>();
-
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_curso_id", referencedColumnName = "curso_id")
+    List<Alumno> alumnos;
 
 }

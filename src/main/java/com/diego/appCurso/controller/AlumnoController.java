@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 
 @RestController
@@ -15,21 +17,24 @@ public class AlumnoController {
 @Autowired
     private AlumnoService alumnoService;
 
-//---Get todos---
-    @GetMapping
-    public List<Alumno> get(){ return alumnoService.getAll(); }
+    @GetMapping                     //Utilizando el endpoint /api/empleados ya voy a ejecutar este metodo. (GET). Por eso NO le especifico la ruta.!
+    public List<Alumno> getAll(@RequestParam(required = false) Boolean adeudaMateria){
+        if (!Objects.isNull(adeudaMateria)){
+            return alumnoService.getAllByAdeuda(adeudaMateria);
+        }else return alumnoService.getAll();
+    }
 
-    //---Get por ID ---
+//---Get por ID ---
     @GetMapping ("/{id}")
     public Alumno getId(@PathVariable Long id){ return alumnoService.getById(id);}
 
-    //---DELETE por Id---
+//---DELETE por Id---
     @DeleteMapping ("/{id}")
     public void deleteById(@PathVariable Long id){
         alumnoService.deleteById(id);
     }
 
-    //---Get todos ordenados---
+//---Get todos ordenados---
     @GetMapping("/sorted")
     public List<Alumno> getSorted(){ return alumnoService.getSorted(); }
 

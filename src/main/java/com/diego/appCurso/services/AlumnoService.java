@@ -20,6 +20,11 @@ public class AlumnoService{
         return alumnoRepository.findAll();
     }
 
+    public List<Alumno> getAllByAdeuda(Boolean adeudaMateria){
+        return alumnoRepository.findAllByAdeudaMateria(adeudaMateria);
+    }
+
+
     //---Retornar alumno por ID---
 
     public Alumno getById(Long id){
