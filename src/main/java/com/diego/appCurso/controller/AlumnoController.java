@@ -53,14 +53,13 @@ public class AlumnoController {
 
 //---ADD alumno ---
     @PostMapping("")
-    public List<Alumno> addAlumno(@RequestBody Alumno alumno){
+    public Alumno addAlumno(@RequestBody Alumno alumno){
         return alumnoService.add(alumno);
     }
 
 //---Modificar alumno por ID---
     @PutMapping("/{id}")
-    public List<Alumno> update(@PathVariable int id, @RequestBody Alumno alumno) {
+    public Alumno update(@PathVariable Long id, @RequestBody Alumno alumno) {
             return alumnoService.update(id, alumno);
     }
-
 }

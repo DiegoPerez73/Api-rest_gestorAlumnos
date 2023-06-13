@@ -85,24 +85,28 @@ public class AlumnoService{
 
     //---Añadir alumnos---
 
-    //Aca tengo una duda, yo por el formato que elegi de asignar ID de alumno, no puedo hacer que aca se me agregue buscando "huecos" en ids, y asignar ese id faltante ahi.
-    //Que podria hacer, generar un metodo que recorra los id, y complete en el faltante? O es mejor asignar al constructor de Alumno otro metodo para que complete los ids?
+    public Alumno add(Alumno alumno) {
+        return alumnoRepository.save(alumno);
 
-    @Override
-    public List<Alumno> add(Alumno alumno) {
-        alumnos.add(alumno);
-        return alumnos;
     }
 
     //---Update de alumno---
-@Override
-    public List<Alumno> update(int id, Alumno nuevoAlumno) {
+    public Alumno update(Long id, Alumno nuevoAlumno) {
 
-        Alumno alumnoAnterior = alumnos.stream().filter(alumno -> alumno.getId()== id).findFirst().orElse(null);
-        alumnos.remove(alumnoAnterior);
-        nuevoAlumno.setId(id);
-        alumnos.add(nuevoAlumno);
-        return alumnos;
+        Alumno alumnoAnterior = alumnoRepository.findById(id).orElse(null);
+        if(alumnoAnterior != null){
+            alumnoAnterior.setId(id);
+            alumnoAnterior.setNombre(nuevoAlumno.getNombre());
+            alumnoAnterior.setApellido(nuevoAlumno.getApellido());
+            alumnoAnterior.setEdad(nuevoAlumno.getEdad());
+            alumnoAnterior.setAbono(nuevoAlumno.getAbono());
+            alumnoAnterior.setDni(nuevoAlumno.getDni());
+            alumnoAnterior.setAdeudaMateria(nuevoAlumno.getAdeudaMateria());
+            alumnoAnterior.setNota(nuevoAlumno.getNota());
+            return alumnoRepository.save(alumnoAnterior);
+        }else {
+            throw new RuntimeException("No se encontro ningun alumno con el id "+id);
+        }
     }
 
 }
