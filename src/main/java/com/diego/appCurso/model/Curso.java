@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,7 +19,7 @@ public class Curso implements Serializable {
     String nombreCurso;
 
     @OneToMany(mappedBy = "curso")
-    List<Alumno> alumnos;
+    List<Alumno> alumnos = new ArrayList<>();
 
 
 }
