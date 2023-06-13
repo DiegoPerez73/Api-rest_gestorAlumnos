@@ -103,6 +103,7 @@ public class AlumnoService{
             alumnoAnterior.setDni(nuevoAlumno.getDni());
             alumnoAnterior.setAdeudaMateria(nuevoAlumno.getAdeudaMateria());
             alumnoAnterior.setNota(nuevoAlumno.getNota());
+
             return alumnoRepository.save(alumnoAnterior);
         }else {
             throw new RuntimeException("No se encontro ningun alumno con el id "+id);

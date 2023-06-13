@@ -22,6 +22,10 @@ public class Alumno implements Serializable {
     private int nota;
     private Boolean abono;
 
+    @ManyToOne
+    @JoinColumn(name = "curso_id", referencedColumnName = "id") //Referencia al Long id de la entity Curso
+    private Curso curso;
+
 }
 
 
