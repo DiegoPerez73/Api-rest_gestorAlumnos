@@ -40,8 +40,10 @@ public class CursoService {
 
     //---Añadir curso---
     public Curso addCurso(Curso curso){
+
        return cursoRepository.save(curso);
     }
+
 
     //---Modificar curso---
     public Curso updateCurso(Long id, Curso curso){

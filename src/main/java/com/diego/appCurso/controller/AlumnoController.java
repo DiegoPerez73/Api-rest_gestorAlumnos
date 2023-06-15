@@ -2,22 +2,23 @@ package com.diego.appCurso.controller;
 
 import com.diego.appCurso.model.Alumno;
 import com.diego.appCurso.services.AlumnoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 
 @RestController
-@RequestMapping("/alumnos")
+@RequestMapping("/api/alumnos")
 public class AlumnoController {
 
-@Autowired
-    private AlumnoService alumnoService;
+    private final AlumnoService alumnoService;
 
-    @GetMapping                     //Utilizando el endpoint /api/empleados ya voy a ejecutar este metodo. (GET). Por eso NO le especifico la ruta.!
+    public AlumnoController(AlumnoService alumnoService) {
+        this.alumnoService = alumnoService;
+    }
+
+    @GetMapping
     public List<Alumno> getAll(@RequestParam(required = false) Boolean adeudaMateria){
         if (!Objects.isNull(adeudaMateria)){
             return alumnoService.getAllByAdeuda(adeudaMateria);
@@ -27,12 +28,6 @@ public class AlumnoController {
 //---Get por ID ---
     @GetMapping ("/{id}")
     public Alumno getId(@PathVariable Long id){ return alumnoService.getById(id);}
-
-//---DELETE por Id---
-    @DeleteMapping ("/{id}")
-    public void deleteById(@PathVariable Long id){
-        alumnoService.deleteById(id);
-    }
 
 //---Get todos ordenados---
     @GetMapping("/sorted")
@@ -67,4 +62,12 @@ public class AlumnoController {
     public Alumno update(@PathVariable Long id, @RequestBody Alumno alumno) {
             return alumnoService.update(id, alumno);
     }
+
+//---DELETE por Id---
+    @DeleteMapping ("/{id}")
+    public void deleteById(@PathVariable Long id){
+        alumnoService.deleteById(id);
+    }
+
+
 }
