@@ -19,13 +19,14 @@ public class AlumnoService{
     @Autowired
     AlumnoRepository alumnoRepository;
 
-    //---Mostrar Informacion completa (desordenada)---
+    //---Mostrar Informacion---
 
     public ResponseEntity<List<Alumno>> getAll() {
 
         return ResponseEntity.ok(alumnoRepository.findAll());
     }
 
+    //---Mostrar los alumnos que adeudan (utilizando @RequestParams)
     public ResponseEntity<List<Alumno>> getAllByAdeuda(Boolean adeudaMateria){
         return ResponseEntity.ok(alumnoRepository.findAllByAdeudaMateria(adeudaMateria));
     }
@@ -47,17 +48,9 @@ public class AlumnoService{
         return ResponseEntity.noContent().build();  //Devuelvo un Response noContent.
     }
 
-    //---Mostrar informacion ordenada de alumnos por apellido ---
-
-    public ResponseEntity<List<Alumno>> getSorted() {
-        List<Alumno> listaAlumnos = alumnoRepository.findAll();
-        return ResponseEntity.ok(listaAlumnos.stream().sorted(Comparator.comparing(Alumno::getApellido)).toList());
-    }
-
-
     //---Añadir alumnos---
 
-    public ResponseEntity<Alumno> add(Alumno alumno) {
+    public ResponseEntity<Alumno> addAlumno(Alumno alumno) {
         Alumno alumnoCreado = alumnoRepository.save(alumno);        //Guardo al alumno creado
         return ResponseEntity.status(HttpStatus.CREATED).body(alumnoCreado);
 

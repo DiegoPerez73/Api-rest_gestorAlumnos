@@ -31,14 +31,10 @@ public class AlumnoController {
     @GetMapping ("/{id}")
     public ResponseEntity<Alumno> getId(@PathVariable Long id){ return alumnoService.getById(id);}
 
-//---Get todos ordenados---
-    @GetMapping("/sorted")
-    public ResponseEntity<List<Alumno>> getSorted(){ return alumnoService.getSorted(); }
-
 //---ADD alumno ---
     @PostMapping
     public ResponseEntity<Alumno> addAlumno(@Valid @RequestBody Alumno alumno){
-        return alumnoService.add(alumno);
+        return alumnoService.addAlumno(alumno);
     }
 
 //---Modificar alumno por ID---

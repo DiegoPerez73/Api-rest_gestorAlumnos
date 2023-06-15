@@ -51,13 +51,13 @@ public class CursoController {
     }
 
     //Asignar alumno a un curso
-    @PostMapping("/{id}/alumnos/{idAlumno}")
+    @PostMapping("/{idCurso}/alumnos/{idAlumno}")
     public ResponseEntity<Curso> asignarCursoAAlumno(@PathVariable Long idCurso, @PathVariable Long idAlumno){
         return cursoService.asignarAlumno(idCurso,idAlumno);
     }
 
     //---Desasignar alumno de un curso---
-    @DeleteMapping("/{id}/alumnos/{idAlumno}")
+    @DeleteMapping("/{idCurso}/alumnos/{idAlumno}")
         public ResponseEntity<Curso> desasignarAlumnoDeCurso(@PathVariable Long idCurso, @PathVariable Long idAlumno){
             return cursoService.desasignarAlumno(idCurso,idAlumno);
         }

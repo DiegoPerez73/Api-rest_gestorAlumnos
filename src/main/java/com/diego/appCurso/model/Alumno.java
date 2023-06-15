@@ -20,7 +20,7 @@ public class Alumno implements Serializable {
     private String apellido;
 
     @NotNull
-    @Size
+    @Size(max = 8)
     @Column(length = 8)
     private String dni;
     private int edad;
