@@ -2,8 +2,13 @@ package com.diego.appCurso.services;
 
 import com.diego.appCurso.model.Alumno;
 import com.diego.appCurso.repositories.AlumnoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.*;
 
 
@@ -16,103 +21,57 @@ public class AlumnoService{
 
     //---Mostrar Informacion completa (desordenada)---
 
-    public List<Alumno> getAll() {
-        return alumnoRepository.findAll();
+    public ResponseEntity<List<Alumno>> getAll() {
+
+        return ResponseEntity.ok(alumnoRepository.findAll());
     }
 
-    public List<Alumno> getAllByAdeuda(Boolean adeudaMateria){
-        return alumnoRepository.findAllByAdeudaMateria(adeudaMateria);
+    public ResponseEntity<List<Alumno>> getAllByAdeuda(Boolean adeudaMateria){
+        return ResponseEntity.ok(alumnoRepository.findAllByAdeudaMateria(adeudaMateria));
     }
 
 
     //---Retornar alumno por ID---
 
-    public Alumno getById(Long id){
-        return alumnoRepository.findById(id).orElse(null);
+    public ResponseEntity<Alumno> getById(Long id){
+
+        return alumnoRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     //---Eliminar un alumno---
-    public void deleteById(Long id){
-        alumnoRepository.deleteById(id);
+    public ResponseEntity<Void> deleteById(Long id){
+        if(!alumnoRepository.existsById(id)){       //Si no existe el alumno con ese Id
+            return ResponseEntity.notFound().build();   //Retorno el not found y lo buildeo.
+        }
+        alumnoRepository.deleteById(id);            //Sino, lo borro. (es un metodo void)
+        return ResponseEntity.noContent().build();  //Devuelvo un Response noContent.
     }
 
     //---Mostrar informacion ordenada de alumnos por apellido ---
 
-    public List<Alumno> getSorted() {
+    public ResponseEntity<List<Alumno>> getSorted() {
         List<Alumno> listaAlumnos = alumnoRepository.findAll();
-        return listaAlumnos.stream().sorted(Comparator.comparing(Alumno::getApellido)).toList();
+        return ResponseEntity.ok(listaAlumnos.stream().sorted(Comparator.comparing(Alumno::getApellido)).toList());
     }
 
-    //---Mostrar el promedio de edad---
-
-    public double getPromedioEdades() {
-
-        List<Alumno> listaAlumnos = alumnoRepository.findAll();
-
-        int totalEdades = 0;
-
-        for (Alumno alumno : listaAlumnos) {
-            totalEdades += alumno.getEdad();
-        }
-
-        return (double) totalEdades /listaAlumnos.size();
-    }
-
-    //---Mostrar el numero de alumnos que adeudan materias---
-
-
-    public List<Alumno> getAdeudaMaterias(){
-       List<Alumno> listaAlumnos = alumnoRepository.findAll();
-
-       return listaAlumnos.stream().filter(alumno -> alumno.getAdeudaMateria()).toList();
-    }
-
-    //---Mostrar alumno con nota mas alta---
-
-    public Alumno getNotaMasAlta(){
-
-        List<Alumno> listaAlumnos = alumnoRepository.findAll();
-
-        listaAlumnos.sort(Comparator.comparing(Alumno::getNota).reversed());
-
-        return listaAlumnos.get(0);
-
-    }
-
-    //---Mostrar si algun alumno no abono la matricula---
-
-    public List<Alumno> getAbono(){
-
-        List<Alumno> listaAlumnos = alumnoRepository.findAll();
-
-        return listaAlumnos.stream().filter(Alumno::getAbono).toList();
-    }
 
     //---Añadir alumnos---
 
-    public Alumno add(Alumno alumno) {
-        return alumnoRepository.save(alumno);
+    public ResponseEntity<Alumno> add(Alumno alumno) {
+        Alumno alumnoCreado = alumnoRepository.save(alumno);        //Guardo al alumno creado
+        return ResponseEntity.status(HttpStatus.CREATED).body(alumnoCreado);
 
     }
 
     //---Update de alumno---
-    public Alumno update(Long id, Alumno nuevoAlumno) {
+    public ResponseEntity<Alumno> update(Long id, Alumno nuevoAlumno) {
 
-        Alumno alumnoAnterior = alumnoRepository.findById(id).orElse(null);
-        if(alumnoAnterior != null){
-            alumnoAnterior.setId(id);
-            alumnoAnterior.setNombre(nuevoAlumno.getNombre());
-            alumnoAnterior.setApellido(nuevoAlumno.getApellido());
-            alumnoAnterior.setEdad(nuevoAlumno.getEdad());
-            alumnoAnterior.setAbono(nuevoAlumno.getAbono());
-            alumnoAnterior.setDni(nuevoAlumno.getDni());
-            alumnoAnterior.setAdeudaMateria(nuevoAlumno.getAdeudaMateria());
-            alumnoAnterior.setNota(nuevoAlumno.getNota());
-
-            return alumnoRepository.save(alumnoAnterior);
-        }else {
-            throw new RuntimeException("No se encontro ningun alumno con el id "+id);
+        if(!alumnoRepository.existsById(id)){                           //Si no existe el alumno con ese id -->
+            return ResponseEntity.notFound().build();                   //Retorno un Response de notFound y lo buildeo
         }
+        nuevoAlumno.setId(id);                                          //Le seteo el id a mano para que lo mantenga
+        Alumno alumnoGuardado = alumnoRepository.save(nuevoAlumno);     //Lo guardo
+        return ResponseEntity.ok(alumnoGuardado);                       //Devuelvo el Response ok del alumno guardado
     }
 
 }

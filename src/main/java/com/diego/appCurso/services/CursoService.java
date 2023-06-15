@@ -2,8 +2,12 @@ package com.diego.appCurso.services;
 
 import com.diego.appCurso.model.Alumno;
 import com.diego.appCurso.model.Curso;
+import com.diego.appCurso.repositories.AlumnoRepository;
 import com.diego.appCurso.repositories.CursoRepository;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -16,48 +20,89 @@ public class CursoService {
     @Autowired
     CursoRepository cursoRepository;
 
+    @Autowired
+    public AlumnoRepository alumnoRepository;
+
 
     //---Mostrar los cursos---
-    public List<Curso> getAll(){
-        return cursoRepository.findAll();
+    public ResponseEntity<List<Curso>> getAll(){
+        return ResponseEntity.ok(cursoRepository.findAll());
     }
 
     //---Mostrar curso por id---
-    public Curso getById(Long id){
-        return cursoRepository.findById(id).orElse(null);
+    public ResponseEntity<Curso> getById(Long id){
+
+        return cursoRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     //---Mostrar alumnos por curso---
-    public List<Alumno> getAlumnosByCursoId(Long id){
+    public ResponseEntity<List<Alumno>> getAlumnosByCursoId(Long id){
 
-        Curso cursoId = cursoRepository.findById(id).orElse(null); //Busco el curso por id. Esto devuelve un Optional, por eso lo guardo asi.
-
-        if(cursoId != null){            //Si el curso con ese id existe-->
-            return cursoId.getAlumnos();
+        Optional<Curso> curso = cursoRepository.findById(id);
+        if (curso.isPresent()){                                 //Si el curso por id existe
+            Curso cursoId = curso.get();                        //Traeme ese curso
+            return ResponseEntity.ok(cursoId.getAlumnos());         //Devolveme un ResponseEntiti de los alumnos del curso (Uso el getter) getAlumnos()
         }
-        return Collections.emptyList();
+        return ResponseEntity.notFound().build();       //Si no existe el curso, arma el Response del error.
     }
 
     //---Añadir curso---
-    public Curso addCurso(Curso curso){
+    public ResponseEntity<Curso> addCurso(Curso curso){
 
-       return cursoRepository.save(curso);
+        Curso nuevoCurso = cursoRepository.save(curso);
+
+       return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCurso);
     }
 
+    //---Asignar alumno al curso---
+    public ResponseEntity<Curso> asignarAlumno(Long idCurso, Long idAlumno){
+        Optional<Curso> optionalCurso = cursoRepository.findById(idCurso);
+        Optional<Alumno> optionalAlumno = alumnoRepository.findById(idAlumno);
+
+        if(optionalCurso.isPresent() && optionalAlumno.isPresent()){
+            Curso curso = optionalCurso.get();
+            Alumno alumno = optionalAlumno.get();
+
+            curso.addAlumno(alumno);
+            alumno.setCurso(curso);
+
+            Curso cursoGuardado = cursoRepository.save(curso);
+            return ResponseEntity.ok(cursoGuardado);
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+
+    //---Desasignar alumno del curso x---
+    public ResponseEntity<Curso> desasignarAlumno(Long idCurso, Long idAlumno){
+        Optional<Curso> optionalCurso = cursoRepository.findById(idCurso);
+        Optional<Alumno> optionalAlumno = alumnoRepository.findById(idAlumno);
+
+        if(optionalCurso.isPresent() && optionalAlumno.isPresent()){
+            Curso curso = optionalCurso.get();
+            Alumno alumno = optionalAlumno.get();
+
+            curso.deleteAlumno(alumno);
+            alumno.setCurso(null);
+
+            Curso cursoGuardado = cursoRepository.save(curso);
+            return ResponseEntity.ok(cursoGuardado);
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     //---Modificar curso---
-    public Curso updateCurso(Long id, Curso curso){
+    public ResponseEntity<Curso> updateCurso(Long id, Curso curso){
 
-        Curso cursoAnterior = cursoRepository.findById(id).orElse(null);
-
-        if(cursoAnterior != null){
-            cursoAnterior.setId(curso.getId());
-            cursoAnterior.setNombreCurso(curso.getNombreCurso());
-            cursoAnterior.setAlumnos(curso.getAlumnos());
-            return cursoRepository.save(cursoAnterior);
-        }
-        throw new RuntimeException("No se encontro ningun alumno con el id "+id);
+    if(!cursoRepository.existsById(id)){            //Si el curso no existe (existsById() es un metodo del CRUD, lo traes de JPA repository(extendiendo en el CursoRepository)
+        return ResponseEntity.notFound().build();   //Devuelvo el ResponseEntity y buildeo el error.
     }
+    Curso cursoModificado = cursoRepository.save(curso);
+    return ResponseEntity.ok(cursoModificado);
+    }
+
 
 
 }
