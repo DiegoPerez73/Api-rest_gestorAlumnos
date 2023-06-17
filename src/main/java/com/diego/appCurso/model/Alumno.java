@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 
+@Data
 @Setter
 @Getter
 @AllArgsConstructor
@@ -30,7 +28,7 @@ public class Alumno implements Serializable, UserDetails {
 
     private String nombre;
     private String apellido;
-    private int edad;
+    private Integer edad;
 
     @NotNull
     @Size(max = 8)
@@ -43,20 +41,27 @@ public class Alumno implements Serializable, UserDetails {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Role role = Role.ALUMNO;
+    private Role role;
 
-    private Integer nota;
-    private Boolean adeudaMateria;
-    private Boolean abono;
 
     @ManyToOne
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
+    //---Le hago el constructor por defecto (Si no lo hago, al hacer el signIn me va a dar error!!!---
+
+    public Alumno(){
+    }
+
+    public Alumno(String dni){
+        this.dni = dni;
+    }
+
 
     //---Aca implemento los metodos de UserDetails---
 
     //---Este va a traerme el enum de roles donde asigno autoridades---
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

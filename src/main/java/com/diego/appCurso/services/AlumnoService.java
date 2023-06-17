@@ -26,17 +26,6 @@ public class AlumnoService{
         return ResponseEntity.ok(alumnoRepository.findAll());
     }
 
-    //---Mostrar los alumnos que adeudan (utilizando @RequestParams)
-    public ResponseEntity<List<Alumno>> getAllByAdeuda(Boolean adeudaMateria){
-        return ResponseEntity.ok(alumnoRepository.findAllByAdeudaMateriaIn(adeudaMateria));
-    }
-
-    //---Mostrar alumnos por rol---
-
-//    public List<Alumno> getByRole(Role role){
-//        return alumnoRepository.findAllByRoleIn(role);
-//    }
-
     //---Retornar alumno por ID---
 
     public ResponseEntity<Alumno> getById(Long id){

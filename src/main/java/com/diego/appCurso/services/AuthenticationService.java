@@ -32,7 +32,7 @@ public class AuthenticationService {
                 .dni(request.getDni())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
-                .nota(request.getNota())
+                .edad(request.getEdad())
                 .build();
 
         alumnoRepository.save(alumno);

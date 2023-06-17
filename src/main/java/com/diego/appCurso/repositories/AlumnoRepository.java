@@ -13,9 +13,7 @@ import java.util.Optional;
 public interface AlumnoRepository extends JpaRepository<Alumno, Long> {
 
 
-        List<Alumno> findAllByAdeudaMateriaIn(Boolean adeudaMateria);   //Creo la consulta
-
-        List<Alumno> findAllByRoleIn(List<Role> role);
+  //      List<Alumno> findAllByRoleIn(List<Role> role);
 
         Optional<Alumno> findByDni(String dni);
 

@@ -14,9 +14,9 @@ public class SignUpRequest {
 
     private String nombre;
     private String apellido;
+    private Integer edad;
     private String dni;
     private String password;
     private Role role;
-    private Integer nota;
 
 }

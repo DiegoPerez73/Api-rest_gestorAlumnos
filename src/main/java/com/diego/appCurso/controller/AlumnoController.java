@@ -22,18 +22,10 @@ public class AlumnoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Alumno>> getAll(@RequestParam(required = false) Boolean adeudaMateria){
-        if (!Objects.isNull(adeudaMateria)){
-            return alumnoService.getAllByAdeuda(adeudaMateria);
-        } else return alumnoService.getAll();
+    public ResponseEntity<List<Alumno>> getAll(){
+
+        return alumnoService.getAll();
     }
-
-//    @GetMapping("/roles")
-//    public ResponseEntity<List<Alumno>> getAllByRoles(@RequestParam ){
-//        return ResponseEntity.ok(alumnoService.getByRole(role));
-//    }
-
-
 
 //---Get por ID ---
     @GetMapping ("/{id}")
