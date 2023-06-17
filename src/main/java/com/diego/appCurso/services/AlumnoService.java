@@ -1,13 +1,13 @@
 package com.diego.appCurso.services;
 
 import com.diego.appCurso.model.Alumno;
+import com.diego.appCurso.model.Role;
 import com.diego.appCurso.repositories.AlumnoRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.*;
 
@@ -28,9 +28,14 @@ public class AlumnoService{
 
     //---Mostrar los alumnos que adeudan (utilizando @RequestParams)
     public ResponseEntity<List<Alumno>> getAllByAdeuda(Boolean adeudaMateria){
-        return ResponseEntity.ok(alumnoRepository.findAllByAdeudaMateria(adeudaMateria));
+        return ResponseEntity.ok(alumnoRepository.findAllByAdeudaMateriaIn(adeudaMateria));
     }
 
+    //---Mostrar alumnos por rol---
+
+//    public List<Alumno> getByRole(Role role){
+//        return alumnoRepository.findAllByRoleIn(role);
+//    }
 
     //---Retornar alumno por ID---
 

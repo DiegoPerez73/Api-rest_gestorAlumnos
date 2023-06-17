@@ -1,6 +1,7 @@
 package com.diego.appCurso.controller;
 
 import com.diego.appCurso.model.Alumno;
+import com.diego.appCurso.model.Role;
 import com.diego.appCurso.services.AlumnoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,13 @@ public class AlumnoController {
             return alumnoService.getAllByAdeuda(adeudaMateria);
         } else return alumnoService.getAll();
     }
+
+//    @GetMapping("/roles")
+//    public ResponseEntity<List<Alumno>> getAllByRoles(@RequestParam ){
+//        return ResponseEntity.ok(alumnoService.getByRole(role));
+//    }
+
+
 
 //---Get por ID ---
     @GetMapping ("/{id}")

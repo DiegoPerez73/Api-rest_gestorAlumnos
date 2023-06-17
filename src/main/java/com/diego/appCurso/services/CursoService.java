@@ -4,21 +4,19 @@ import com.diego.appCurso.model.Alumno;
 import com.diego.appCurso.model.Curso;
 import com.diego.appCurso.repositories.AlumnoRepository;
 import com.diego.appCurso.repositories.CursoRepository;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class CursoService {
     @Autowired
-    CursoRepository cursoRepository;
+    private CursoRepository cursoRepository;
 
     @Autowired
     public AlumnoRepository alumnoRepository;
